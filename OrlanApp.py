@@ -1,4 +1,57 @@
+
 import pygame
+import sys
+
+# Initialize Pygame
+pygame.init()
+
+# Set up the display
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("Drone Remote Controller")
+
+# Define colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREEN = (0, 255, 0)
+
+# Define fonts
+font = pygame.font.Font(None, 36)
+
+# Define menu items
+menu_items = ["Drones", "Maps", "Missions"]
+selected_item = None
+
+clock = pygame.time.Clock()
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            x, y = event.pos
+            for i, item in enumerate(menu_items):
+                item_rect = pygame.Rect(i * (800 // len(menu_items)), 0, 800 // len(menu_items), 60)
+                if item_rect.collidepoint(x, y):
+                    selected_item = i
+                    break
+
+    # Clear the screen
+    screen.fill(WHITE)
+
+    # Draw menu items
+    for i, item in enumerate(menu_items):
+        text = font.render(item, True, BLACK)
+        item_rect = pygame.Rect(i * (800 // len(menu_items)), 0, 800 // len(menu_items), 60)
+        if selected_item == i:
+            pygame.draw.rect(screen, GREEN, item_rect)  # Highlight selected item
+            text = font.render(item, True, WHITE)
+        screen.blit(text, (i * (800 // len(menu_items)) + 10, 10))
+
+    # Update the display
+    pygame.display.flip()
+
+    clock.tick(30)
 
 class Drone:
     def __init__(self, drone_type, specs):
